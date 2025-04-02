@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3059/3059003.png">
+    <style>
+        /* Background with Animated Gradient */
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientBG 8s ease infinite;
+            overflow: hidden;
+        }
+
+        /* Gradient Animation */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Container */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
+            width: 45%;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Input Field with Paste Button */
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 80%;
+            margin: auto;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+            text-align: center;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .paste-btn {
+            position: absolute;
+            right: 5px;
+            background: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .paste-btn:hover {
+            background: #0056b3;
+            transform: scale(1.1);
+        }
+
+        /* Futuristic Button */
+        button {
+            padding: 12px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: 0.3s ease-in-out;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+        }
+
+        /* QR Code Section */
+        .qr-container {
+            margin-top: 20px;
+        }
+
+        .qr-container img {
+            display: block;
+            margin: auto;
+            border: 3px solid #00c6ff;
+            padding: 10px;
+            border-radius: 12px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .qr-container img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Download Button */
+        .download-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            text-decoration: none;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            transition: 0.3s ease-in-out;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>QR Code Generator</h2>
+        <div class="input-container">
+            <input type="text" id="urlInput" placeholder="Enter URL">
+            
+        </div>
+        <button onclick="generateQR()">Generate QR</button>
+        <div class="qr-container">
+            <img id="qrImage" style="display:none;">
+            <a id="downloadLink" class="download-btn" download="qr_code.png">
+                Download QR Code
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function generateQR() {
+            let url = document.getElementById("urlInput").value;
+            if (!url) {
+                alert("Please enter a URL");
+                return;
+            }
+
+            let qrImage = document.getElementById("qrImage");
+            let downloadLink = document.getElementById("downloadLink");
+
+            fetch("/generate_qr", {
+                method: "POST",
+                body: new URLSearchParams({url: url}),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                let qrUrl = URL.createObjectURL(blob);
+                qrImage.src = qrUrl;
+                qrImage.style.display = "block";
+
+                downloadLink.href = qrUrl;
+                downloadLink.style.display = "flex";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function pasteClipboard() {
+            navigator.clipboard.readText()
+                .then(text => document.getElementById("urlInput").value = text)
+                .catch(err => console.error("Failed to paste:", err));
+        }
+    </script>
+</body>
+</html>
