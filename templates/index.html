@@ -19,6 +19,7 @@
             background-size: 400% 400%;
             animation: gradientBG 8s ease infinite;
             overflow: hidden;
+            padding: 20px;
         }
 
         /* Gradient Animation */
@@ -39,6 +40,7 @@
             text-align: center;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
         }
 
         h2 {
@@ -52,7 +54,8 @@
             position: relative;
             display: flex;
             align-items: center;
-            width: 80%;
+            width: 100%;
+            max-width: 350px;
             margin: auto;
         }
 
@@ -106,6 +109,8 @@
             margin-top: 15px;
             font-weight: bold;
             transition: 0.3s ease-in-out;
+            width: 100%;
+            max-width: 200px;
         }
 
         button:hover {
@@ -125,6 +130,7 @@
             padding: 10px;
             border-radius: 12px;
             transition: transform 0.3s ease-in-out;
+            max-width: 100%;
         }
 
         .qr-container img:hover {
@@ -152,6 +158,48 @@
         .download-btn:hover {
             transform: scale(1.1);
             background: linear-gradient(90deg, #0072ff, #00c6ff);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .input-container {
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            input {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .paste-btn {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
